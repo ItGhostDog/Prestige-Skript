@@ -1,0 +1,29 @@
+on join:
+	if {prestige.%player's uuid%} is not set:
+		set {prestige.%player's uuid%} to 0
+		stop
+	if {cash.%player's uuid%} is not set:
+		set {cash.%player's uuid%} to 0
+		stop
+command /prestige:
+	trigger:
+		if {prestige.%player's uuid%} = 0:
+			set {_prestigecost} to 1000000
+		if {prestige.%player's uuid%} > 0:
+			set {_prestigecost} to {prestige.%player's uuid%}*2000000
+		set {_u} to {prestige.%player's uuid%}+1
+		open virtual chest inventory with size 5 named "&6Prestige" to player
+		format gui slot (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,  and 43) of player with gray stained glass pane named " " to do nothing
+		format gui slot 0 of player with book named "&6Your current prestige is &2%{prestige.%player's uuid%}%&6!"
+		format gui slot 44 of player with barrier named "&4Close" to close
+		format gui slot 22 of player with green wool named "&6Buy Prestige &e%{_u}%&6!" with lore "&2Cost: %{_prestigecost}%" to close:
+			if {cash.%player's uuid%} >= {_prestigecost}:
+				remove {_prestigecost} from {cash.%player's uuid%}
+				add 1 to {prestige.%player's uuid%}
+				wait 5 ticks
+				clear player's inventory
+				console command "pex user %player% suffix "" &7[&dP%{prestige.%player's uuid%}%&7]"""
+				wait 5 ticks
+				send "&c&lPrestige &8>> &2 You are now prestige %{prestige.%player's uuid%}%" to player
+			else:
+				send "&c&lPrestige &8>> &4You cannot afford Prestige &e%{_u}%&4!" to player
